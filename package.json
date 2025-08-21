@@ -1,0 +1,22 @@
+{
+  "name": "simple-load-balancer",
+  "version": "1.0.0",
+  "description": "Un proyecto de demostración de un balanceador de carga con health checks.",
+  "main": "loadBalancer.js",
+  "scripts": {
+    "start:lb": "node loadBalancer.js",
+    "start:service1": "node service.js 3001",
+    "start:service2": "node service.js 3002",
+    "start:service3": "node service.js 3003",
+    "dev": "concurrently \"npm run start:lb\" \"npm run start:service1\" \"npm run start:service2\" \"npm run start:service3\""
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
