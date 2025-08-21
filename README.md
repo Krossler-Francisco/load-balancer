@@ -14,6 +14,9 @@ This project allows you to see how these two concepts work together to create a 
 
 ---
 
+<img width="60" height="300" alt="image" src="https://github.com/user-attachments/assets/4f351df3-69ac-4aa3-a0ca-3fd28267bddc" />
+
+
 ## Project Structure
 
 - **`loadBalancer.js`**: The load balancer script that listens on port `8080`, distributes requests to services, and monitors their health status.
