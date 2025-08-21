@@ -1,86 +1,97 @@
-
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo: Balanceador de Carga</title>
+    <title>Load Balancer Demo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🚦 Demo de Balanceador de Carga</h1>
-            <p>Este panel muestra el estado de los servidores de réplica y permite enviar peticiones a través del balanceador de carga.</p>
-        </header>
+    <div class="main-layout">
+        <div class="left-panel">
+            <div class="dev-container">
+                <header>
+                    <h1>Load Balancer</h1>
+                    <p>Demo: Request distribution and service health monitoring.</p>
+                </header>
 
-        <section class="status-section">
-            <h2>Estado de los Servidores</h2>
-            <div id="server-status-container" class="server-status-container">
-                </div>
-        </section>
+                <section class="status-section">
+                    <h2>Server Status</h2>
+                    <div id="server-status-container" class="server-status-container">
+                    </div>
+                </section>
+                
+                <hr style="border-color: var(--border-color); margin: 1rem 0;">
 
-        <section class="action-section">
-            <h2>Probar el Balanceador</h2>
-            <button id="make-request-btn">Enviar Petición a /api/data</button>
-        </section>
+                <section class="action-section">
+                    <h2>Test the Load Balancer</h2>
+                    <button id="make-request-btn">Send Request to /api/data</button>
+                </section>
+            </div>
+        </div>
 
-        <section class="log-section">
-            <h2>Log de Respuestas</h2>
-            <pre id="response-log"></pre>
-        </section>
+        <div class="right-panel">
+            <header>
+                <h2>Response Log</h2>
+            </header>
+            <div id="response-log"></div>
+        </div>
     </div>
 
     <script>
         const statusContainer = document.getElementById('server-status-container');
         const makeRequestBtn = document.getElementById('make-request-btn');
         const responseLog = document.getElementById('response-log');
-
-        // Función para actualizar el estado de los servidores en la UI
+        
         async function updateServerStatus() {
             try {
                 const response = await fetch('/status');
                 const servers = await response.json();
 
-                statusContainer.innerHTML = ''; // Limpiar contenedor
+                statusContainer.innerHTML = '';
 
                 servers.forEach(server => {
                     const statusDiv = document.createElement('div');
                     statusDiv.className = `server-status ${server.isAlive ? 'alive' : 'dead'}`;
                     statusDiv.innerHTML = `
                         <span class="server-url">${server.url}</span>
-                        <span class="status-indicator">${server.isAlive ? 'Activo' : 'Caído'}</span>
+                        <span class="status-indicator">${server.isAlive ? 'Active' : 'Down'}</span>
                     `;
                     statusContainer.appendChild(statusDiv);
                 });
             } catch (error) {
-                console.error('Error al obtener el estado de los servidores:', error);
-            }
-        }
-
-        // Función para realizar una petición a través del balanceador
-        async function makeRequest() {
-            try {
-                const response = await fetch('/api/data');
-                const data = await response.json();
-                
                 const logEntry = document.createElement('div');
-                logEntry.textContent = `[${new Date().toLocaleTimeString()}] -> ${data.message}`;
-                responseLog.prepend(logEntry); // Añadir la nueva respuesta al principio
-            } catch (error) {
-                 const logEntry = document.createElement('div');
-                logEntry.className = 'error';
-                logEntry.textContent = `[${new Date().toLocaleTimeString()}] -> ERROR: ${error.message || 'No se pudo conectar.'}`;
+                logEntry.className = 'error log-entry';
+                logEntry.textContent = `[${new Date().toLocaleTimeString()}] -> Health Check ERROR: ${error.message}`;
                 responseLog.prepend(logEntry);
             }
         }
 
+        async function makeRequest() {
+            try {
+                const response = await fetch('/api/data');
+                if (!response.ok) {
+                    throw new Error(response.statusText || 'Connection error');
+                }
+                const data = await response.json();
+                
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                logEntry.textContent = `[${new Date().toLocaleTimeString()}] -> ${data.message}`;
+                responseLog.prepend(logEntry);
+            } catch (error) {
+                 const logEntry = document.createElement('div');
+                logEntry.className = 'error log-entry';
+                logEntry.textContent = `[${new Date().toLocaleTimeString()}] -> ERROR: ${error.message || 'Could not connect.'}`;
+                responseLog.prepend(logEntry);
+            }
+        }
+        
+
         makeRequestBtn.addEventListener('click', makeRequest);
 
-        // Actualizar el estado cada 2 segundos
-        setInterval(updateServerStatus, 2000);
+        setInterval(updateServerStatus, 6000);
 
-        // Carga inicial
         updateServerStatus();
     </script>
 </body>
