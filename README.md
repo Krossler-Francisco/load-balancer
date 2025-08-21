@@ -1,37 +1,38 @@
-# Proyecto: Balanceador de Carga y Health Checker
+# Project: Load Balancer and Health Checker
 
-Este proyecto es una demostración clara y práctica de dos conceptos fundamentales en la arquitectura de sistemas distribuidos: el **Balanceo de Carga** y la **Tolerancia a Fallos** mediante `Health Checks`.
+This project is a clear and practical demonstration of two fundamental concepts in distributed systems architecture: **Load Balancing** and **Fault Tolerance** through `Health Checks`.
 
-## ¿Por Qué es Esto Importante?
+## Why Is This Important?
 
-En grandes proyectos, los servidores web no son infalibles, tienen capacidad limitada. Para asegurar que una aplicación pueda manejar un gran número de usuarios y no se caiga si uno de sus servidores falla, se utilizan arquitecturas que distribuyen el trabajo.
+In large projects, web servers are not infallible and have limited capacity. To ensure that an application can handle a large number of users and doesn't crash if one of its servers fails, architectures that distribute the workload are used.
 
-1.  **Balanceo de Carga:** El balanceador de carga actúa como un **director**, distribuyendo las peticiones entrantes entre múltiples réplicas idénticas de un único servicio. Evitando que cualquier servidor individual se sobrecargue y mejora el rendimiento general del sistema. La estrategia utilizada es **Round Robin**, un método sencillo que asigna cada nueva petición al siguiente servidor en la lista, de forma circular.
+1. **Load Balancing:** The load balancer acts as a **director**, distributing incoming requests among multiple identical replicas of a single service. This prevents any individual server from becoming overloaded and improves the overall system performance. The strategy used here is **Round Robin**, a simple method that assigns each new request to the next server on the list, in a circular fashion.
 
-2.  **Tolerancia a Fallos (`Health Checks`):** Un balanceador de carga no es útil si sigue enviando tráfico a servidores que no funcionan. El **Health Checker** es el encargado de verificar periódicamente el estado de cada servidor. Si un servidor deja de responder, el balanceador lo "saca de la rotación" hasta que vuelva a estar operativo. Esto garantiza que la aplicación siga funcionando sin interrupciones para el usuario, incluso si uno o más de sus componentes fallan.
+2. **Fault Tolerance (`Health Checks`):** A load balancer is not useful if it continues to send traffic to servers that are not working. The **Health Checker** is responsible for periodically verifying the status of each server. If a server stops responding, the balancer "removes it from rotation" until it becomes operational again. This ensures that the application continues to function without interruptions for the user, even if one or more of its components fail.
 
-Este proyecto permite ver cómo estos dos conceptos trabajan en conjunto para crear un sistema escalable.
+This project allows you to see how these two concepts work together to create a scalable system.
 
 ---
 
-## Estructura del Proyecto
+## Project Structure
 
--   **`loadBalancer.js`**: Script balanceador de carga que escucha en el puerto `8080`, distribuye las peticiones a los servicios y monitorea su estado de salud.
--   **`service.js`**: Plantilla para servidores de réplica. Es un servicio web con un endpoint simple que puede ser iniciado en múltiples instancias, cada una en un puerto diferente (`3001`, `3002`, `3003`, etc.).
--   **`public/`**: Página web estática (`index.html`) que permite interactuar con el sistema y ver el estado de los servidores en tiempo real.
+- **`loadBalancer.js`**: The load balancer script that listens on port `8080`, distributes requests to services, and monitors their health status.
+- **`service.js`**: A template for replica servers. It's a simple web service with a single endpoint that can be started in multiple instances, each on a different port (`3001`, `3002`, `3003`, etc.).
+- **`public/`**: A static website (`index.html`) that allows you to interact with the system and view the server status in real-time.
 ---
 
-## Iniciar el Proyecto
+## How to Run the Project
 
-1.  **Instalar dependencias.**
-    ```bash
-    npm install
-    ```
+1. **Install dependencies.**
 
-2.  **Iniciar todos los servicios (balanceador y réplicas).**
-    ```bash
-    npm run dev
-    ```
+   ```bash
+   npm install
 
-3.  **Demostración local.**
-    [http://localhost:8080](http://localhost:8080)
+3. **Start all services (balancer and replicas).**
+
+   ```bash
+   npm run dev
+
+5. **Local demonstration.**
+
+   [http://localhost:8080](http://localhost:8080)
